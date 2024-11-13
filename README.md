@@ -5,6 +5,3 @@ This provides 3 folders related to different algorithms to evaluate the proposed
 2. DRL_based algorithm using DQN agent, written by Python
 3. Dataset generator, written by Python
 
-There are some packages and tools need to be installed:
-1. Python packages: sklearn, tf_agents, tensorflow
-2. optimization tools: cplex, gurobi

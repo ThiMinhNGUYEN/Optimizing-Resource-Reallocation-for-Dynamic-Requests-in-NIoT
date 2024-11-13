@@ -1,13 +1,14 @@
 Please follow these steps to run python app:
 
-### If Gurobi is already install in your machine, please ignore Step 1 and Step 2 ####
+Step 1: Download and Install Gurobi (ref: https://www.gurobi.com/downloads/gurobi-software/):
+      python -m pip install gurobipy==11.0.3
 
-Step 1: Download and Install Gurobi at https://www.gurobi.com/downloads/gurobi-software/
-- NOTE: We need a version from 11.0.3
-
+- NOTE: Our app needs a version from 11.0.3. 
+With Gurobi 11, gurobipy can be used with Python 3.8, 3.9, 3.10, 3.11, and 3.12
+  
 Step 2: Request and Install the academic license at https://portal.gurobi.com/iam/licenses/list/
 
-Step 3: Install python and required package with version as following:
+Step 3: Install required package with version as following:
 - pip 21.3.1
 - tensorflow 2.15.0
 - tensorboard 2.15.2
@@ -26,16 +27,13 @@ Step 3: Install python and required package with version as following:
 - scipy 1.12.0
 - fnss 0.9.1
 
-Step 4: Run jar file with command line
-  java -jar PTproblem_runfile.jar para1 para2 para3 para4
-
+Step 4: Run python file with command line
+  python main.py para1 para2
 where: 
-- PTproblem_runfile.jar : our jar file
-- para1 : input folder name containing input files
-- para2 : output folder name (if it doesnt exist, they will create new folder)
-- para3: algorithm name including Optimize, PTH
-- para4: objective function option: PTO, PTO_b, PTO_q  
+- main.py : our python file
+- para1: algorithm name including drl, opt
+- para2 : input folder name containing input files
 
 For example: we put the test "FW_40_1_10.txt" inside a folder "input_files" then run
-  java -jar PTproblem_runfile.jar input_files output_files PTO PTO
-  java -jar PTproblem_runfile.jar input_files output_files PTH PTO
+  python main.py drl input_files  # run RTL algorithm
+  python main.py opt input_files  # run RTA algorithm

@@ -19,4 +19,4 @@ For example: we put the test "FW_40_1_10.txt" inside a folder "input_files" then
 1. run PTO algorithm:
   java -jar PTproblem_runfile.jar input_files output_files PTO PTO 
 2. run PTH algorithm:
-  java -jar PTproblem_runfile.jar input_files output_files PTH PTO # run PTH algorithm
+  java -jar PTproblem_runfile.jar input_files output_files PTH PTH

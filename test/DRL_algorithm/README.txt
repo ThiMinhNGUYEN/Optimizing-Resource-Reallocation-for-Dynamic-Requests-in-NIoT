@@ -38,4 +38,4 @@ For example: we put the test "FW_40_1_10.txt" inside a folder "input_files",
  1. run RTL algorithm
   python main.py drl input_files 
  2. run RTA algorithm
-  python main.py opt input_files  # run RTA algorithm
+  python main.py opt input_files

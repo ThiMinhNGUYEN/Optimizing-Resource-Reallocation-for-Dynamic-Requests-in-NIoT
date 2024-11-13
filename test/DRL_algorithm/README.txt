@@ -34,6 +34,8 @@ where:
 - para1: algorithm name including drl, opt
 - para2 : input folder name containing input files
 
-For example: we put the test "FW_40_1_10.txt" inside a folder "input_files" then run
-  python main.py drl input_files  # run RTL algorithm
+For example: we put the test "FW_40_1_10.txt" inside a folder "input_files", 
+ 1. run RTL algorithm
+  python main.py drl input_files 
+ 2. run RTA algorithm
   python main.py opt input_files  # run RTA algorithm

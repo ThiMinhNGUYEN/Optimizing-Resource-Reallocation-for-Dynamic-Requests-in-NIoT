@@ -11,12 +11,11 @@ import time
 ####################
 
 if __name__ == '__main__':
-    # assign directory
-    algo = "drl"  # algo can be "drl" or "opt"
-    directory = 'simple_test_input'
+   # assign directory
+    algo = sys.argv[1] # algo can be "drl" or "opt"
+    directory = sys.argv[2] # directory = 'simple_test_input'
 
-    # iterate over files in
-    # that directory
+    # iterate over files in the directory
     for f in os.listdir(directory):
         filename = os.path.join(directory, f)
         # checking if it is a file

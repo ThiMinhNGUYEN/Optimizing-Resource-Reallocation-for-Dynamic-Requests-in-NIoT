@@ -3,7 +3,7 @@ Please follow these steps to run python app:
 Step 1: Download and Install Gurobi (ref: https://www.gurobi.com/downloads/gurobi-software/):
       python -m pip install gurobipy==11.0.3
 
-- NOTE: Our app needs a version from 11.0.3. 
+- NOTE: Our app needs a version at least 11.0.3. 
 With Gurobi 11, gurobipy can be used with Python 3.8, 3.9, 3.10, 3.11, and 3.12
   
 Step 2: Request and Install the academic license at https://portal.gurobi.com/iam/licenses/list/

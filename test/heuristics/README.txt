@@ -15,7 +15,7 @@ where:
 - para3: algorithm name including Optimize, PTH
 - para4: objective function option: PTO, PTO_b, PTO_q  
 
-For example: we put the test "FW_40_1_10.txt" inside a folder "input_files" then run
+For example: 
 1. run PTO algorithm:
   java -jar PTproblem_runfile.jar input_files output_files PTO PTO 
 2. run PTH algorithm:

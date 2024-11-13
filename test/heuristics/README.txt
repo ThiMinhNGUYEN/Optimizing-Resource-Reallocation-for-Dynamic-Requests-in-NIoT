@@ -16,5 +16,7 @@ where:
 - para4: objective function option: PTO, PTO_b, PTO_q  
 
 For example: we put the test "FW_40_1_10.txt" inside a folder "input_files" then run
-  java -jar PTproblem_runfile.jar input_files output_files PTO PTO # run PTO algorithm
+1. run PTO algorithm:
+  java -jar PTproblem_runfile.jar input_files output_files PTO PTO 
+2. run PTH algorithm:
   java -jar PTproblem_runfile.jar input_files output_files PTH PTO # run PTH algorithm

@@ -6,7 +6,7 @@ It contains 2 parts:
 1. The first one is source code in src folder. 
       There are 3 subfolders related to different algorithms to evaluate the proposed models:
 
-      1.1. Several heuristics alogrithms including PTO(an optimal solution from mixed integer programming technique) , PTH (heuristic algorithm) and PTS (a benchmark solution), written by Java
+      1.1. Several heuristics alogrithms including PTO(an optimal solution from mixed integer programming technique) , PTH (heuristic algorithm) , written by Java
   
       1.2. DRL_based algorithm using DQN agent, written by Python
   

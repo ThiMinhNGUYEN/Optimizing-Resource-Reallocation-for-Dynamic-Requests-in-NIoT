@@ -8,7 +8,7 @@ With Gurobi 11, gurobipy can be used with Python 3.8, 3.9, 3.10, 3.11, and 3.12
   
 Step 2: Request and Install the academic license at https://portal.gurobi.com/iam/licenses/list/
 
-Step 3: Install required package with version as following:
+Step 3: Install required packages with version as following:
 - pip 21.3.1
 - tensorflow 2.15.0
 - tensorboard 2.15.2

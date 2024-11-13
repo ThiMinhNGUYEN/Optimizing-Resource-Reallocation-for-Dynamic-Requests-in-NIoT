@@ -13,7 +13,7 @@ where:
 - para1 : input folder name containing input files
 - para2 : output folder name (if it doesnt exist, they will create new folder)
 - para3: algorithm name including Optimize, PTH
-- para4: objective function option: PTO, PTO_b, PTO_q  
+- para4: objective function option: [PTO, PTO_q], [PTH, PTH_q]  
 
 For example: 
 1. run PTO algorithm:

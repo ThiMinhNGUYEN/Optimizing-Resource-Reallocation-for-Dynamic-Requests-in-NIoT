@@ -16,5 +16,6 @@ where:
 - para4: objective function option: PTO, PTO_b, PTO_q  
 
 For example
+  java -jar PTproblem_runfile.jar input_files output_files PTO PTO
   java -jar PTproblem_runfile.jar input_files output_files PTH PTO
 

@@ -29,13 +29,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.uncommons.maths.random.ExponentialGenerator;
 import org.uncommons.maths.random.PoissonGenerator;
 
-import gurobi.GRB;
-import gurobi.GRBEnv;
-import gurobi.GRBException;
-import gurobi.GRBLinExpr;
-import gurobi.GRBModel;
-import gurobi.GRBQuadExpr;
-import gurobi.GRBVar;
+import com.gurobi.gurobi.*;
 
 public class main {
 	static BufferedWriter out;
@@ -245,11 +239,8 @@ public class main {
 			{				
 				line[k]=thisLine;
 				k++;
-			}
-			
-			
+			}	
 			functionArr= new Function[m];
-			//demandArr = new Demand[d];
 			
 			//m function
 			int line_no = 0;
@@ -266,7 +257,6 @@ public class main {
 			line_no += 1;
 			for (int i=0;i<d;i++)
 			{
-				System.out.println(line[line_no]);
 				tempLine = line[line_no].split(" ");
 				Function[] f = new Function[tempLine.length-6];
 				for (int j=0;j<f.length;j++)
@@ -282,13 +272,7 @@ public class main {
 			// virtual network
 			for (int i=0;i <n;i++)
 			{				
-				System.out.println(line[line_no]);
-				/*int wwww= Integer.parseInt(line[line_no]);
-				if (wwww>0) {
-					cap.add(2000);
-				} else {
-					cap.add(0);
-				}*/
+				
 	   	        cap.add(Integer.parseInt(line[line_no]));
 	   	        if(Integer.parseInt(line[line_no])>leafCapacity)
 	   	        	noSpine++;
@@ -298,7 +282,6 @@ public class main {
 			for (int i=1;i<n+1;i++)
 			{
 				ArrayList<Integer> temp= new ArrayList<>();
-				System.out.println(line[line_no]);
 				tempLine = line[line_no].split(" ");
 				for(int j=1;j<n+1;j++)
 				{
@@ -309,75 +292,37 @@ public class main {
 			}
 			
 			failure = new double[n];
-			functionDataSize = new int[m];
-			
-			
-			nodeCost = new int[n];
-			
-			
+			functionDataSize = new int[m];			
+			nodeCost = new int[n];		
 			nodeDelay = new double[n];
 			nodeType = new int[n];
 			
 			
 			functionNodeDelay = new double[m][n];
-			
-			
-			//print
-			System.out.println("Addition information");
-			System.out.println ("Failure/Cost/Delay on nodes:");
-			//ArrayList<Integer> failedNode = new ArrayList<Integer>();
-			//int index = 0;
 			for (int i = 0; i <n; i++) {
-				System.out.println(line[line_no]);
 				tempLine = line[line_no].split(" ");
 				failure[i] = Double.parseDouble(tempLine[0]);
-				if (failure[i] == 1)
-					System.out.println(i+1);
-				/*double failureVal = Double.parseDouble(tempLine[0]);
-				if (failureVal == 1) {
-					failedNode.add(i);
-					index++;
-				}*/
+
 				nodeCost[i] = Integer.parseInt(tempLine[1]);
 				nodeDelay[i] = Double.parseDouble(tempLine[2]);
 				nodeType[i] = Integer.parseInt(tempLine[3]);
-				System.out.println(failure[i] + " " + nodeCost[i] + " " + nodeDelay[i] + " "+ nodeType[i]);
 				line_no ++;
 			}
-	
-			
-			System.out.println();
-			
-			System.out.println ("Datasize on function :");
-			System.out.println(line[line_no]);
 			for (int i = 0; i <m; i++) {
 			
 				tempLine = line[line_no].split(" ");
-				functionDataSize[i] = Integer.parseInt(tempLine[i]);
-				System.out.print(functionDataSize[i] + " ");				
+				functionDataSize[i] = Integer.parseInt(tempLine[i]);			
 			}			
-			System.out.println();
 			line_no++;
-			System.out.println ("function Node delay :");
 			for (int i = 0; i <m; i++) {
-				System.out.println(line[line_no]);
 				for (int j = 0; j <n; j++) {
 					tempLine = line[line_no].split(" ");
-					functionNodeDelay[i][j] = Double.parseDouble(tempLine[j]);
-					System.out.print(functionNodeDelay[i][j] + " ");				
+					functionNodeDelay[i][j] = Double.parseDouble(tempLine[j]);			
 				}
 				line_no ++;
-				System.out.println();
 			}
 			
-
-			System.out.println("End of addition function ");
 			g= new MyGraph(cap,ww);
-			
-		
-			
-		
-            // Always close files.
             in.close();  
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -560,10 +505,6 @@ public class main {
 		}
 		return fiCluster;
 	}
-
-	//giai thuat cluster 2
-
-
 	public static int numberOfTimes(int id, ArrayList<Integer> arr)
 	{
 		int num = 0;
@@ -2683,6 +2624,94 @@ public class main {
 		
 	}
 	
+	public static myTuple initFunction_q(int v, int u, Demand _d, int cap_v, double theta) {
+		int index = 0;
+		double cost_v = nodeDelay[v] * _d.bwS() *0.1;
+		int req = piFunction(index, _d)* _d.getFunctions()[index].getReq() ;
+
+		while ((index < _d.getFunctions().length) &&
+				( req <= cap_v))  {
+			if ((_d.getFunctions()[index].getType() == 2 && nodeType[v] == 2)
+				||(_d.getFunctions()[index].getType() == 3 && nodeType[v] == 3)) {
+				cost_v += functionNodeDelay[_d.getFunctions()[index].id() - 1][v];
+				cap_v = cap_v - req;					
+			} else {
+				if (index > 0) {
+					index--;
+				}
+				break;
+			}
+			if (index == _d.getFunctions().length -1) {
+				break;
+			}
+			index++;
+			req = piFunction(index, _d)* _d.getFunctions()[index].getReq() ;
+		
+		}
+			if (cost_v == 0) {
+				return new myTuple(v, -1.0, -1, cap_v, u);
+			}
+		cost_v += (_d.getFunctions().length - index)*theta;
+		
+		return new myTuple(v, cost_v, index, cap_v, u);
+	}
+	
+	public static void UpdateFunction_q(myTuple vstar, int v, int cap_v, ArrayList<myTuple> labels, Demand _d, double theta  ) {
+		if (vstar.getIndex() == _d.getFunctions().length -1) return;
+		int index = vstar.getIndex() + 1;
+		double cost_temp = nodeDelay[v] * _d.bwS()* 0.1;
+		int req = piFunction(index, _d)* _d.getFunctions()[index].getReq() ;
+
+		boolean finished = false;
+		while ((index < _d.getFunctions().length) &&
+				( req <= cap_v))  {
+			if ((_d.getFunctions()[index].getType() == 2 && nodeType[v] == 2)
+				||(_d.getFunctions()[index].getType() == 3 && nodeType[v] == 3)) {
+				cost_temp += functionNodeDelay[_d.getFunctions()[index].id() - 1][v];
+				cap_v = cap_v - req;
+				
+			} else {
+				if (index > 0) {
+					index--;
+				}
+				break;
+			}
+			if (index == _d.getFunctions().length -1) {
+				finished = true;
+				break;
+			}
+			index++;
+			req = piFunction(index, _d)* _d.getFunctions()[index].getReq() ;		
+		}
+		if (index == vstar.getIndex()) return; //can not put function in this node
+		double cost_v1;
+		if (!finished) {
+			cost_v1 =  vstar.getCost() + cost_temp - (index - vstar.getIndex())*theta;
+		} else {
+			cost_v1 = vstar.getCost() + cost_temp;
+			
+		}
+
+		int index_v = -1;
+		for (int i= 0; i< labels.size();i++) {
+			if (labels.get(i).getNodeId() == v) {
+				index_v = i;
+				break;
+			}
+		}
+		if (index_v== -1) {
+			//add v to labels
+			labels.add(new myTuple(v,cost_v1,index, cap_v, vstar.getNodeId()));
+			return;
+		}
+		if (labels.get(index_v).getCost()== -1 || labels.get(index_v).getCost() > cost_v1)  {
+			labels.get(index_v).setCost(cost_v1);
+			labels.get(index_v).setCapacity(cap_v);
+			labels.get(index_v).setIndex(index);
+			labels.get(index_v).setPreNode(vstar.getNodeId());
+		}
+	}
+	
 	public static myTuple initFunction(int v, int u, Demand _d, int cap_v, double theta) {
 		int index = 0;
 		double cost_v = 0.0;
@@ -2790,6 +2819,189 @@ public class main {
 				return labels.get(i);
 		}
 		return new myTuple();
+	}
+	
+	public static void PTH_q(String outFile) { //HEURISTIC
+		try {
+
+			// File file = new File(outFile);
+			// out = new BufferedWriter(new FileWriter(file));
+			out = new BufferedWriter(new FileWriter(outFile));
+			out.write("number of function:" + m);
+			out.newLine();
+			for (int i = 0; i < m; i++) {
+				out.write(functionArr[i].toString());
+				out.newLine();
+			}
+			out.write("number of Demand:" + d);
+			out.newLine();
+			for (int i = 0; i < d; i++) {
+				out.write(demandArray.get(i).toString());
+				out.newLine();
+			}
+			out.write("virtual node:" + n);
+			out.newLine();
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++)
+					out.write(g.getEdgeWeight(i + 1, j + 1) + " ");
+				out.newLine();
+			}
+
+			for (int i = 0; i < n; i++) {
+				out.write(failure[i] + " ");
+			}
+			out.newLine();
+
+			UD = 0.0;
+			UC = 0.0;
+			UQ = 0.0;
+			Ub = 0.0;
+			//calculate theta_q: The maximum value of the total delay for routing and processing when deploy any
+			//function of any demand on any node
+			double theta = 0.0;
+			
+			for (int v = 0; v < n; v++) {
+				for (int dId = 0; dId < demandArray.size(); dId++) {
+					double bwD = demandArray.get(dId).bwS();
+					for (int i = 0; i < demandArray.get(dId).getFunctions().length; i++) {
+						Function _f = demandArray.get(dId).getFunctions()[i];
+						if (theta < functionNodeDelay[_f.id() - 1][v] + nodeDelay[v] * demandArray.get(dId).bwS()* 0.1) {
+							theta = functionNodeDelay[_f.id() - 1][v] + nodeDelay[v] * demandArray.get(dId).bwS()* 0.1;
+						}
+
+					}
+				}
+			}
+
+			MyGraph g1 = new MyGraph(g.K, g.w);
+			acceptDemands = demandArray.size();
+			ArrayList<Demand> dLst = sortDemandRequiredCores(demandArray);
+	
+			
+			for (int i = 0; i <dLst.size();i++) {
+
+				ArrayList<myTuple> labels = new ArrayList<>();
+				
+				ArrayList<Integer> delta = new ArrayList<>();
+				
+				Demand _d = dLst.get(i);
+				int _src= _d.sourceS();
+				int _dest = _d.destinationS();
+				double bwD = _d.bwS();
+			
+				delta.add(_src - 1);
+				for (int u =0; u<n; u++) {
+					double cap_e = g1.w.get(_src -1).get(u);
+					if ( cap_e > _d.bwS()) { 
+						//(s,u) is an edge 
+						myTuple tuple_u = initFunction_q(u,_src-1, _d, g1.K.get(u), theta);
+						labels.add(tuple_u);						
+					} 
+				}
+				boolean failed = false;
+				do {					
+					myTuple vstar = getMinTuple(labels, delta);
+					if (vstar.getCost() == -1) {
+						acceptDemands--;
+						//System.out.println ("request refused");
+						failed = true;
+						break;
+					}
+					if (vstar.getIndex() == _d.getFunctions().length-1) {
+						//System.out.println ("request accepted");
+						failed = false;
+						break;
+					}
+					delta.add(vstar.getNodeId());
+					for (int u = 0; u < n; u++) {
+						double cap_e = g1.w.get(vstar.getNodeId()).get(u);
+						if (!delta.contains(u) && cap_e > _d.bwS()) {
+							UpdateFunction_q(vstar,u,g1.K.get(u), labels, _d, theta);							
+						}
+					}
+				} while (true);	
+				if (failed) continue;
+				ArrayList<myTuple> candidates = new ArrayList<>();
+				int demandNumber = _d.getFunctions().length;
+				for (int j= 0; j< labels.size();j++) {
+					if (labels.get(j).getIndex() == demandNumber-1) {
+						candidates.add(labels.get(j));
+					}
+				}
+				//select min
+				failed = true;
+				while (!candidates.isEmpty()) {
+					myTuple result = getMinTuple(candidates, new ArrayList<Integer>());
+					int node_result = result.getNodeId();
+					
+					//check if it exist path from node_result to _dest 
+					ArrayList<Integer> path = maxCapPath(node_result + 1, _dest, g1, _d.bwS());
+					
+					if (path !=null && !path.isEmpty()) {
+						failed = false;						
+						int currIndex= result.getIndex();
+						//update capacity
+						g1.setCap(node_result + 1, (int) result.getCapacity());
+						int prevNode = result.getPreNode();
+						
+						//update capacity
+						int startIndex = -1;
+						while (node_result!= _src -1) {
+							startIndex = 0; //start from prevIndex + 1
+							int prevNode_backup = -1;
+							if (prevNode != _src - 1) {
+								myTuple nn = getTuple(prevNode, labels);
+								startIndex= nn.getIndex() + 1;	
+								prevNode_backup = nn.getPreNode();
+							}
+							
+							for (int idx = startIndex; idx <= currIndex; idx ++) {
+								UC+= bwD * _d.getFunctions()[idx].getReq() * nodeCost[node_result];
+								out.write("function " + idx + " of demand " + _d.idS() + " is placed to" + (node_result +1) );
+								out.newLine();								
+							}
+							//update capacity
+							g1.setCap(node_result + 1, (int) result.getCapacity());						
+							
+							node_result = prevNode;
+							currIndex = startIndex -1;							
+							prevNode = prevNode_backup;
+						}
+						if (startIndex > 0) {
+							//startIndex = 0 to current Index is placed to src node
+							
+							for (int idx = 0; idx < startIndex; idx ++) {
+								UC+= bwD * _d.getFunctions()[idx].getReq() * nodeCost[_src-1];
+								out.write("function " + idx + " of demand " + _d.idS() + " is placed to" + (_src) );
+								out.newLine();	
+								g1.setCap(_src, g1.getCap(_src) - _d.getFunctions()[idx].getReq());
+							}							
+						
+						}						
+						break;
+					}
+					candidates.remove(result);
+				}
+				if (failed) {
+					acceptDemands--;	
+					//System.out.println ("request refused");
+				} 
+							
+			}
+			out.write("UC = " + UC);
+			System.out.println("UC = " + UC);
+			System.out.println();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+
 	}
 	
 	public static void PTH(String outFile) { //HEURISTIC
@@ -2975,7 +3187,8 @@ public class main {
 
 	}
 	
-	public static void mainPTH(String inputFolder, String outputFolder)
+	
+	public static void mainPTH(String inputFolder, String outputFolder, String option)
 	{
 		//Cover
 				BufferedWriter out1 = null;
@@ -3000,7 +3213,19 @@ public class main {
 					out_dir.mkdirs();
 					//create new directory if does not exist					
 				}
-				String chuoi1= outputFolder + "/output_pth_all.txt";
+				System.out.println(option);
+				String chuoi1= outputFolder;
+				switch (option) {
+					case "PTH":
+						chuoi1 += "/output_pth_all.txt";
+						break;
+					case "PTH_q":
+						chuoi1 += "/output_pth_q_all.txt";
+						break;
+					default:
+						System.out.println("4th parameter: " + option + " is incorrect!");
+						return;						
+				}
 				//File _f = new File(chuoi1 );
 				String str="";
 				try {
@@ -3013,7 +3238,12 @@ public class main {
 							System.out.println("file: " + file.getCanonicalPath());
 							ReadNewInputFile(file.getPath());
 							str=file.getName(); 
-							String chuoi2=  outputFolder +"/details/pth_resultDetail_";
+							String chuoi2=  outputFolder;
+							if (option.equals("PTH")) {
+								chuoi2 += "/details/pth_resultDetail_";
+							} else {
+								chuoi2 += "/details/pth_q_resultDetail_";
+							}
 							str = chuoi2+str;
 							out1.write(str);
 							_duration=0;
@@ -3027,8 +3257,12 @@ public class main {
 							//alpha = alpha_val[index];
 							alpha = 0.000001;
 							final long startTime = System.currentTimeMillis();
+							if (option.equals("PTH")) {
+								PTH(str);
+							} else {
+								PTH_q(str);
+							}
 							
-							PTH(str);
 							_duration = System.currentTimeMillis() - startTime;
 							out1.write(" "+m + " " +d +" "+n+ " "+value_final+" "+ acceptDemands+ " "+ UD+" "+UC +" "+ UQ +" "+Ub +" "+_duration);
 								out1.newLine();
@@ -3168,7 +3402,7 @@ public static void main(String[] args)//opt
 	String outputFolder = args[1];
 	
 	String fileMain =  args[2];
-	String objStr = args[3]; //PTO; PTO_q; PTO_b
+	String objStr = args[3]; //PTO; PTO_q; PTO_b; PTH; PTH_q
 	
 	switch (fileMain) {
 	case "Input":
@@ -3179,7 +3413,7 @@ public static void main(String[] args)//opt
 		mainOptimizeResilient(inputFolder, outputFolder, objStr);
 		break;
 	case "PTH":
-		mainPTH(inputFolder, outputFolder);
+		mainPTH(inputFolder, outputFolder, objStr);
 		break;
 	default:		
 		break;

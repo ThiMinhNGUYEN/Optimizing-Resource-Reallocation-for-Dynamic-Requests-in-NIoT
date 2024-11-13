@@ -1,7 +1,7 @@
 Please follow these steps to run java app:
 
 Step 1: Download and Install Gurobi at https://www.gurobi.com/downloads/gurobi-software/
-- NOTE: We need a version from 11.0.3
+- NOTE: We need a version at least 11.0.3
 Step 2: Request and Install the academic license at https://portal.gurobi.com/iam/licenses/list/
 Step 3: Download jar file for our development at https://drive.google.com/file/d/17Rv5_rUz8BUBS2CI5S7cIEbZhJOzeVnH/view?usp=sharing 
 (It contains all required libraries so it is more than 25 MB that we can not upload directly to Github)

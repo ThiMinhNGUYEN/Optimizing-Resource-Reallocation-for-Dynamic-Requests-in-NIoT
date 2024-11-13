@@ -17,6 +17,8 @@ where:
 
 For example: 
 1. run PTO algorithm:
-  java -jar PTproblem_runfile.jar input_files output_files Optimize PTO 
+  java -jar PTproblem_runfile.jar input_files output_files Optimize PTO
+  java -jar PTproblem_runfile.jar input_files output_files Optimize PTO_q
 2. run PTH algorithm:
   java -jar PTproblem_runfile.jar input_files output_files PTH PTH
+  java -jar PTproblem_runfile.jar input_files output_files PTH PTH_q

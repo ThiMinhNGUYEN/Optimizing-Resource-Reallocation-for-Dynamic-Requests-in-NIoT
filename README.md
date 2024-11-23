@@ -1,4 +1,4 @@
-# Optimizing-Resource-Reallocation-for-Dynamic-Requests-in-IoT-based-on-NFV
+# Optimizing-Resource-Reallocation-for-Dynamic-Requests-in-NIoT
 
 For this project, we publish source code and the runable files to evaluate our proposed model.
 It contains 2 parts:

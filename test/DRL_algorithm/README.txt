@@ -26,6 +26,7 @@ Step 3: Install required packages with version as following:
 - numpy 1.26.4
 - scipy 1.12.0
 - fnss 0.9.1
+- docplex 2.25.236
 
 Step 4: Run python file with command line
   python main.py para1 para2

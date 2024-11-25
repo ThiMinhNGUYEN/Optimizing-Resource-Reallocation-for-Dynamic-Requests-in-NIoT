@@ -1,10 +1,10 @@
-Please follow these steps to run python app:
+Please follow these steps to run the Python app:
 
-Step 1: Download and Install Gurobi (ref: https://www.gurobi.com/downloads/gurobi-software/):
+Step 1: Download and Install Gurobi (Reference: https://www.gurobi.com/downloads/gurobi-software/):
       python -m pip install gurobipy==11.0.3
 
-- NOTE: Our app needs a version at least 11.0.3. 
-With Gurobi 11, gurobipy can be used with Python 3.8, 3.9, 3.10, 3.11, and 3.12
+- Note: Our app requires at least version 11.0.3 of Gurobi. 
+With Gurobi 11, 'gurobipy' can be used with Python versions 3.8, 3.9, 3.10, 3.11, and 3.12
   
 Step 2: Request and Install the academic license at https://portal.gurobi.com/iam/licenses/list/
 
@@ -28,15 +28,15 @@ Step 3: Install required packages with version as following:
 - fnss 0.9.1
 - docplex 2.25.236
 
-Step 4: Run python file with command line
+Step 4: Run the Python file using the command line:
   python main.py para1 para2
-where: 
-- main.py : our python file
-- para1: algorithm name including drl, opt
-- para2 : input folder name containing input files
+Where: 
+- "main.py" : Our Python file
+- "para1"   : The algorithm name, such as 'drl', 'opt'
+- "para2"   : The input folder name containing input files
 
 For example: 
- 1. run RTL algorithm
+ 1. To run the RTL algorithm
   python main.py drl input_files 
- 2. run RTA algorithm
+ 2. To run the RTA algorithm
   python main.py opt input_files
